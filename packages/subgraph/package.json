@@ -1,0 +1,30 @@
+{
+  "name": "@omnibridge/subgraph",
+  "version": "1.0.0",
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.21.1",
+    "@graphprotocol/graph-ts": "^0.20.1"
+  },
+  "license": "MIT",
+  "scripts": {
+    "auth": "graph auth https://thegraph.primalswap.io/deploy/ $GRAPH_ACCESS_TOKEN",
+    "prepare-bsc-primal": "mustache config/bsc-primal.json subgraph.template.yaml > subgraph.yaml",
+    "prepare-primal-bsc": "mustache config/primal-bsc.json subgraph.template.yaml > subgraph.yaml",
+
+    "codegen": "graph codegen --output-dir src/types/",
+    "build": "graph build",
+
+    "create-bsc-primal": "graph create primal/bsc-to-primal-omnibridge --node https://thegraph.primalswap.io/deploy/",
+    "create-primal-bsc": "graph create primal/primal-to-bsc-omnibridge --node https://thegraph.primalswap.io/deploy/",
+    "deploy-bsc-primal": "graph deploy primal/bsc-to-primal-omnibridge --ipfs https://thegraph.primalswap.io/ipfs/ --node https://thegraph.primalswap.io/deploy/",
+    "deploy-primal-bsc": "graph deploy primal/primal-to-bsc-omnibridge --ipfs https://thegraph.primalswap.io/ipfs/ --node https://thegraph.primalswap.io/deploy/",
+    "remove-bsc-primal": "graph remove primal/bsc-to-primal-omnibridge --node https://thegraph.primalswap.io/deploy/",
+    "remove-primal-bsc": "graph remove primal/primal-to-bsc-omnibridge --node https://thegraph.primalswap.io/deploy/",
+    "deploy-all-bsc-primal":"yarn remove-bsc-primal && yarn prepare-bsc-primal && yarn codegen && yarn build && yarn create-bsc-primal && yarn deploy-bsc-primal",
+    "deploy-all-primal-bsc":"yarn remove-primal-bsc && yarn prepare-primal-bsc && yarn codegen && yarn build && yarn create-primal-bsc && yarn deploy-primal-bsc"
+
+  },
+  "devDependencies": {
+    "mustache": "^4.2.0"
+  }
+}

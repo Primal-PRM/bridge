@@ -1,0 +1,63 @@
+specVersion: 0.0.2
+description: Subgraph that indexes the omnibridge transfers
+repository: https://github.com/raid-guild/xdai-omnibridge
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Omnibridge
+    network: bsc
+    source:
+      abi: Omnibridge
+      address: "0x230dED59fDefc9D41dae05d02899004A923501Da"
+      startBlock: 25288574
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      abis:
+        - name: Bridge
+          file: Omnibridge/src/abis/bridge.json
+        - name: Omnibridge
+          file: Omnibridge/src/abis/omnibridge.json
+        - name: Token
+          file: Omnibridge/src/abis/token.json
+      entities:
+        - BridgeTransfer
+        - Token
+      eventHandlers:
+        - event: TokensBridged(indexed address,indexed address,uint256,indexed bytes32)
+          handler: handleBridgeTransfer
+        - event: TokensBridgingInitiated(indexed address,indexed address,uint256,indexed bytes32)
+          handler: handleInitiateTransfer
+        - event: NewTokenRegistered(indexed address,indexed address)
+          handler: handleNewToken
+      file: Omnibridge/Omnibridge.wasm
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: AMB
+    network: bsc
+    source:
+      abi: AMB
+      address: "0x00722c41c43a237a880f315242C0721eB1C73D58"
+      startBlock: 25288574
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      abis:
+        - name: AMB
+          file: AMB/src/abis/amb.json
+      entities:
+        - UserRequest
+      eventHandlers:
+        - event: UserRequestForSignature(indexed bytes32,bytes)
+          handler: handleUserRequestForSignature
+        - event: UserRequestForAffirmation(indexed bytes32,bytes)
+          handler: handleUserRequestForAffirmation
+        - event: RelayedMessage(indexed address,indexed address,indexed bytes32,bool)
+          handler: handleRelayedMessage
+        - event: AffirmationCompleted(indexed address,indexed address,indexed bytes32,bool)
+          handler: handleAffirmationCompleted
+        - event: CollectedSignatures(address,bytes32,uint256)
+          handler: handleCollectedSignatures
+      file: AMB/AMB.wasm
+      language: wasm/assemblyscript

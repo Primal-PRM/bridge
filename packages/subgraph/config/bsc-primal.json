@@ -1,0 +1,6 @@
+{
+  "network": "bsc",
+  "startBlock": "25288574",
+  "omnibridge": "0x230dED59fDefc9D41dae05d02899004A923501Da",
+  "amb": "0x00722c41c43a237a880f315242C0721eB1C73D58"
+}
